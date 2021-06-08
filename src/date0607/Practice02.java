@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Practice02 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         String[] names = {"系统分析", "需求分析", "Java开发"};
         int[] prices = {65, 34, 130};
         String[] authors = {"张三", "李四", "王五"};

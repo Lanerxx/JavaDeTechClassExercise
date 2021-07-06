@@ -48,6 +48,7 @@ public class Practice04 {
         }
         updateUsers();
     }
+
     public static String filePath = "src/date0624/users.txt";
 
     public static List<User> users = new ArrayList<>();

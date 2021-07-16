@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Practice04 {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner scanner = new Scanner(System.in);
         boolean flag = true;
-        initUsers();
+        initUsers3();
         while (flag){
             System.out.println("1、注册  2、登录  3、退出");
             int operation = scanner.nextInt();
@@ -46,14 +46,54 @@ public class Practice04 {
                     System.out.println("指令错误");
             }
         }
-        updateUsers();
+        updateUsers3();
     }
 
     public static String filePath = "src/date0624/users.txt";
 
     public static List<User> users = new ArrayList<>();
 
-    public static void initUsers() throws IOException {
+    public static void initUsers3() throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
+        User u;
+        while (true){
+            try {
+                u = (User)ois.readObject();
+                users.add(u);
+            }catch (EOFException e){
+                break;
+            }
+        }
+        ois.close();
+    }
+
+    public static void updateUsers3() throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
+        for (User user : users) {
+            oos.writeObject(user);
+        }
+        oos.close();
+    }
+
+    public static void initUsers2() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String str;
+        while ((str = br.readLine()) != null){
+            users.add(new User(str.split("=")[0],str.split("=")[1]));
+        }
+        br.close();
+    }
+
+    public static void updateUsers2() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+        for (User user : users) {
+            bw.write(user.getUsername() + "=" + user.getPassword());
+            bw.newLine();
+        }
+        bw.close();
+    }
+
+    public static void initUsers1() throws IOException {
         FileInputStream fileInputStream = new FileInputStream(filePath);
         ByteArrayOutputStream byteArrayInputStream = new ByteArrayOutputStream();
         byte[] bytes = new byte[1024];
@@ -73,7 +113,7 @@ public class Practice04 {
         fileInputStream.close();
     }
 
-    public static void updateUsers() throws IOException {
+    public static void updateUsers1() throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(filePath);
         for (User user : users) {
             byte[] bytes = (user.username + "=" + user.password + "\n").getBytes();
@@ -83,7 +123,7 @@ public class Practice04 {
     }
 }
 
-class User{
+class User implements Serializable{
     String username;
     String password;
 
@@ -98,5 +138,21 @@ class User{
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
